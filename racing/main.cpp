@@ -52,6 +52,7 @@ int main() {
 	
 	int camaraZ = 0;
 	int camaraX = 0;
+	int speed = 100;
 
 	while (window.isOpen()) {
 		Event event;
@@ -60,8 +61,15 @@ int main() {
 				window.close();
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::Up)) camaraZ += roadsegmentLength;
-		if (Keyboard::isKeyPressed(Keyboard::Down)) camaraZ -= roadsegmentLength;
+		if (Keyboard::isKeyPressed(Keyboard::Up)) {
+			speed += 2;
+			if (speed > 1000) speed = 1000;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Down)) {
+			speed -= 2;
+			if (speed < 100) speed = 100;
+		}
+		camaraZ += speed;//¼Ó¼õËÙ
 		if (Keyboard::isKeyPressed(Keyboard::Left)) camaraX -= 100;
 		if (Keyboard::isKeyPressed(Keyboard::Right)) camaraX += 100;
 
