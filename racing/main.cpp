@@ -6,7 +6,7 @@ const int WINDOW_WIDTH = 1024;
 const int WINDOW_HEIGHT = 768;
 const int roadWidth = 1800;
 const int roadsegmentLength = 180;
-const int roadcount = 2000;
+const int roadcount = 1884;//总路段数 pi * 600
 
 struct Road {
 	float x, y, z;
@@ -60,6 +60,10 @@ int main() {
 		if (Keyboard::isKeyPressed(Keyboard::Left)) camaraX -= 100;
 		if (Keyboard::isKeyPressed(Keyboard::Right)) camaraX += 100;
 
+		int totalLength = roadcount * roadsegmentLength;
+		if (camaraZ > totalLength) camaraZ -= totalLength; //上边界检测
+		if (camaraZ < 0) camaraZ += totalLength; //下边界检测
+
 		window.clear();
 		int roadIndex = camaraZ / roadsegmentLength;
 		float x= 0 , dx = 0;
@@ -72,7 +76,7 @@ int main() {
 
 		for (int i = roadIndex; i < roadIndex + 300; ++i) {
 			Road& now = roads[i % roadcount];
-			now.project(camaraX - x, camaraY, camaraZ);
+			now.project(camaraX - x, camaraY, camaraZ - (i >= roadcount ? totalLength : 0 ));
 			dx += now.curve;
 			x += dx;
 			if (!i) {
