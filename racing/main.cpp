@@ -55,19 +55,29 @@ int main() {
 		/*DrawTrape(window, Color::White, WINDOW_WIDTH / 2, 500, 200, WINDOW_WIDTH / 2
 			, 300, 100);*/
 
-		for (int i = 0; i < roadcount; ++i) {
+		for (int i = 0; i < 600; ++i) {
 			Road& now = roads[i];
-			now.project(0, 1500, 0);
+			now.project(0, 1600, 0);
 
 			if (!i) {
 				continue;
 			}
 			Road& prev = roads[i-1];
-			Color road = i % 2 ? Color(105, 105, 105) : Color(101, 101, 101);
+			Color grass = (i / 3) % 2 ? Color(16, 210, 16) : Color(0, 199, 0);
+			Color edge = (i / 3) % 2 ? Color(0, 0, 0) : Color(255, 255, 255);
+			Color road = (i/3) % 2 ? Color(105, 105, 105) : Color(101, 101, 101);
+			DrawTrape(window, grass,
+				prev.X, prev.Y, WINDOW_WIDTH,
+				now.X, now.Y, WINDOW_WIDTH);
+			DrawTrape(window, edge,
+				prev.X, prev.Y, prev.Z * 1.3,
+				now.X, now.Y, now.Z * 1.3);
 			DrawTrape(window, road,
 				prev.X, prev.Y, prev.Z,
 				now.X, now.Y, now.Z);
+			
 		}
+		
 		window.display();
 	}
 
