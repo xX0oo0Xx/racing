@@ -11,8 +11,9 @@ const int roadcount = 2000;
 struct Road {
 	float x, y, z;
 	float X, Y, Z;
+	float scale, curve;
 
-	Road(int _x, int _y, int _z) : x(_x), y(_y), z(_z) {}
+	Road(int _x, int _y, int _z, float _c) : x(_x), y(_y), z(_z), curve(_c){}
 		void project(int camX, int camY, int camZ) {
 			float scale = 1.0f / (z - camZ);
 			X = (1 + scale * (x - camX)) * WINDOW_WIDTH / 2;
@@ -39,9 +40,11 @@ int main() {
 
 	std::vector<Road> roads;
 	for (int i = 0; i < roadcount; ++i) {
-		Road r(0, 0, (i+1) * roadsegmentLength);
+		float curve = (i > 0 && i < 300) ? 0.5f : -0.5f; //弯曲道路
+		Road r(0, 1600 * sin(i / 30.0), (i + 1) * roadsegmentLength, curve);
 		roads.push_back(r);
 	}
+	
 	int camaraZ = 0;
 	int camaraX = 0;
 
@@ -59,17 +62,27 @@ int main() {
 
 		window.clear();
 		int roadIndex = camaraZ / roadsegmentLength;
+		float x= 0 , dx = 0;
+		float camaraY = 1600 + roads[roadIndex].y; //山体道路
+		int minY = WINDOW_HEIGHT;
+
 		// Game rendering and logic would go here
 		/*DrawTrape(window, Color::White, WINDOW_WIDTH / 2, 500, 200, WINDOW_WIDTH / 2
 			, 300, 100);*/
 
 		for (int i = roadIndex; i < roadIndex + 300; ++i) {
 			Road& now = roads[i % roadcount];
-			now.project(camaraX, 1600, camaraZ);
-
+			now.project(camaraX - x, 1600, camaraZ);
+			dx += now.curve;
+			x += dx;
 			if (!i) {
 				continue;
 			}
+			if (now.Y < minY) {
+				minY = now.Y;
+			}else {
+			continue;
+		}
 			Road& prev = roads[(i-1) % roadcount];
 			Color grass = (i / 3) % 2 ? Color(16, 210, 16) : Color(0, 199, 0);
 			Color edge = (i / 3) % 2 ? Color(0, 0, 0) : Color(255, 255, 255);
