@@ -72,7 +72,7 @@ int main() {
 
 		for (int i = roadIndex; i < roadIndex + 300; ++i) {
 			Road& now = roads[i % roadcount];
-			now.project(camaraX - x, 1600, camaraZ);
+			now.project(camaraX - x, camaraY, camaraZ);
 			dx += now.curve;
 			x += dx;
 			if (!i) {
