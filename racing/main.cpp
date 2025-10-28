@@ -38,6 +38,11 @@ int main() {
 	RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Racing Game");
 	window.setFramerateLimit(60);
 
+	Texture bg;
+	bg.loadFromFile("cloud.png");
+	Sprite s(bg, IntRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT/2));
+
+
 	std::vector<Road> roads;
 	for (int i = 0; i < roadcount; ++i) {
 		float curve = (i > 0 && i < 300) ? 0.5f : -0.5f; //ÍäÇúµÀÂ·
@@ -73,7 +78,7 @@ int main() {
 		// Game rendering and logic would go here
 		/*DrawTrape(window, Color::White, WINDOW_WIDTH / 2, 500, 200, WINDOW_WIDTH / 2
 			, 300, 100);*/
-
+			
 		for (int i = roadIndex; i < roadIndex + 300; ++i) {
 			Road& now = roads[i % roadcount];
 			now.project(camaraX - x, camaraY, camaraZ - (i >= roadcount ? totalLength : 0 ));
@@ -87,6 +92,8 @@ int main() {
 			}else {
 			continue;
 		}
+			s.setTextureRect(IntRect(0, 0, WINDOW_WIDTH, minY));
+			window.draw(s);
 			Road& prev = roads[(i-1) % roadcount];
 			Color grass = (i / 3) % 2 ? Color(16, 210, 16) : Color(0, 199, 0);
 			Color edge = (i / 3) % 2 ? Color(0, 0, 0) : Color(255, 255, 255);
